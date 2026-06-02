@@ -31,7 +31,7 @@ const { buildGitDiff } = require("./lib/diff");
 const { commitAndPush } = require("./lib/commit");
 const { openSettings } = require("./lib/settings");
 const { ask } = require("./lib/utils");
-const { checkVsCodeOpen } = require("./lib/vscodeCheck");
+const { checkEditorOpen } = require("./lib/vscodeCheck");
 
 async function run() {
   let runtimeConfig = { ...config };
@@ -51,7 +51,7 @@ async function run() {
 
     switch (choice) {
       case "1": {
-        const vsCheck = checkVsCodeOpen(runtimeConfig.remoteRepo);
+        const vsCheck = checkEditorOpen(runtimeConfig.remoteRepo);
         if (vsCheck.warned) console.log(vsCheck.message);
         if (!vsCheck.ok) {
           console.log("\n" + vsCheck.reason);
