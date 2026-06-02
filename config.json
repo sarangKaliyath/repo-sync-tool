@@ -2,6 +2,7 @@
   "mainRepoName": "Main Repo",
   "remoteRepoName": "Remote Repo",
   "mainRepo": "",
+  "mainRepoUrl": "",
   "remoteRepo": "",
   "mainBranch": "",
   "remoteBranch": "",
