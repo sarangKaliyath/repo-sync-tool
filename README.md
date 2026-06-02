@@ -16,7 +16,7 @@ Running `repo-sync` executes a 5-step workflow:
 
 - Node.js >= 20
 - Git installed and on your `PATH`
-- Both repositories already cloned locally
+- Remote (target) repository already cloned locally
 - Both repositories have a working `origin` remote (used for pull and push)
 
 ## Installation
@@ -39,7 +39,7 @@ You will be prompted for:
 
 1. **Main repo label** — a display name for the source repository (default: `Main Repo`)
 2. **Remote repo label** — a display name for the target repository (default: `Remote Repo`)
-3. **Main repo path** — absolute filesystem path to the cloned source repo
+3. **Main repo path or git URL** — either an absolute filesystem path to a locally cloned source repo, or a git URL (e.g. `https://github.com/org/repo.git`). If a URL is provided, the repo is cloned automatically to `~/.repo-sync-tool/repos/<org_repo>/` and kept up to date on every sync.
 4. **Remote repo path** — absolute filesystem path to the cloned target repo
 5. **Main branch** — branch to read from in the source repo (lists available branches)
 6. **Remote branch** — branch to write to and push in the target repo (lists available branches)
@@ -81,7 +81,8 @@ At runtime, `config.local.json` is merged on top of `config.json`. If `config.lo
 |---|---|---|
 | `mainRepoName` | Display label for the source repo | `"Main Repo"` |
 | `remoteRepoName` | Display label for the target repo | `"Remote Repo"` |
-| `mainRepo` | Absolute path to the source (main) repo | `""` |
+| `mainRepo` | Absolute path to the source repo (local clone or cache dir) | `""` |
+| `mainRepoUrl` | Git URL of the source repo (set when a URL was provided during setup) | `""` |
 | `remoteRepo` | Absolute path to the target (remote) repo | `""` |
 | `mainBranch` | Branch to pull from and read in the main repo | `""` |
 | `remoteBranch` | Branch to pull, write to, and push in the remote repo | `""` |
@@ -92,7 +93,7 @@ All fields are editable via the **Settings** menu (option 2).
 ### Settings Menu Options
 
 1. Main repo label
-2. Main repo path
+2. Main repo path or git URL
 3. Remote repo label
 4. Remote repo path
 5. Main branch
@@ -107,6 +108,31 @@ All fields are editable via the **Settings** menu (option 2).
 | `Main/Remote repo not found: <path>` | The path does not exist on disk |
 | `Main/Remote branch "<name>" does not exist` | Branch not found in local or remote tracking refs |
 | Push fails with auth error | Git credential helper or SSH key not configured — set up authentication outside this tool |
+| Clone fails with auth error | The git URL requires credentials; ensure your credential helper or SSH key has access to the remote |
+
+## Release Notes
+
+### v1.1.0
+
+**Git URL support for the main (source) repo**
+
+The main repo can now be specified as a git URL instead of a local path. When a URL is provided:
+
+- The repo is cloned once to `~/.repo-sync-tool/repos/<org_repo>/` on first use
+- Subsequent syncs fetch and pull the cached clone automatically — no manual `git pull` needed
+- If the cache directory is deleted (e.g. on a new machine), the tool re-clones it transparently on the next sync
+- Switching back to a local path via Settings clears the stored URL
+
+Accepted URL formats: `https://`, `http://`, `git@`
+
+### v1.0.0
+
+Initial release.
+
+- Interactive setup wizard
+- Pull both repos, sync a configurable `src` directory, merge `package.json` dependencies
+- Timestamped commit with push confirmation
+- Settings menu for reconfiguring paths, branches, and sync path without re-running setup
 
 ## License
 
