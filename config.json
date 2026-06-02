@@ -1,0 +1,9 @@
+{
+  "mainRepoName": "Main Repo",
+  "remoteRepoName": "Remote Repo",
+  "mainRepo": "",
+  "remoteRepo": "",
+  "mainBranch": "",
+  "remoteBranch": "",
+  "syncPath": "src"
+}
