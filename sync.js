@@ -61,8 +61,8 @@ async function run() {
         await syncSrc(runtimeConfig);
         await mergePackageJson(runtimeConfig);
         await buildGitDiff();
-        const pushed = await commitAndPush(runtimeConfig);
-        if (pushed) process.exit(0);
+        const done = await commitAndPush(runtimeConfig);
+        if (done) process.exit(0);
         break;
       }
 
