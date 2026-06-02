@@ -1,5 +1,6 @@
 ./node_modules
-./config.local.js# Dependencies
+./config.local.json
+# Dependencies
 node_modules/
 
 # Logs

@@ -1,7 +1,7 @@
 {
   "name": "repo-sync-tool",
   "version": "1.0.0",
-  "description": "",
+  "description": "A CLI tool to sync a source directory and merge package.json dependencies from one Git repository to another",
   "main": "sync.js",
   "bin": {
     "repo-sync": "sync.js"
@@ -9,13 +9,26 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
+  "keywords": [
+    "git",
+    "sync",
+    "repository",
+    "cli",
+    "devtools",
+    "repo-sync",
+    "file-sync",
+    "package-merge"
+  ],
   "author": "sarang-kaliyath",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sarang-kaliyath/repo-sync-tool.git"
+  },
+  "engines": {
+    "node": ">=20"
+  },
   "dependencies": {
-    "chalk": "^4.1.2",
-    "crypto": "^1.0.1",
-    "fast-glob": "^3.3.3",
     "fs-extra": "^11.3.5",
     "ora": "^9.4.0",
     "simple-git": "^3.36.0"
