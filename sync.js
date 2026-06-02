@@ -31,7 +31,6 @@ const { buildGitDiff } = require("./lib/diff");
 const { commitAndPush } = require("./lib/commit");
 const { openSettings } = require("./lib/settings");
 const { ask } = require("./lib/utils");
-const { checkEditorOpen } = require("./lib/vscodeCheck");
 
 async function run() {
   let runtimeConfig = { ...config };
@@ -50,21 +49,14 @@ async function run() {
     const choice = await ask("Select: ");
 
     switch (choice) {
-      case "1": {
-        const vsCheck = checkEditorOpen(runtimeConfig.remoteRepo);
-        if (vsCheck.warned) console.log(vsCheck.message);
-        if (!vsCheck.ok) {
-          console.log("\n" + vsCheck.reason);
-          break;
-        }
+      case "1":
         await pullRepos(runtimeConfig);
         await syncSrc(runtimeConfig);
         await mergePackageJson(runtimeConfig);
         await buildGitDiff();
-        const done = await commitAndPush(runtimeConfig);
-        if (done) process.exit(0);
+        const pushed = await commitAndPush(runtimeConfig);
+        if (pushed) process.exit(0);
         break;
-      }
 
       case "2":
         runtimeConfig = await openSettings(runtimeConfig);
