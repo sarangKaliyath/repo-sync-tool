@@ -31,6 +31,7 @@ const { buildGitDiff } = require("./lib/diff");
 const { commitAndPush } = require("./lib/commit");
 const { openSettings } = require("./lib/settings");
 const { ask } = require("./lib/utils");
+const { checkVsCodeOpen } = require("./lib/vscodeCheck");
 
 async function run() {
   let runtimeConfig = { ...config };
@@ -49,7 +50,13 @@ async function run() {
     const choice = await ask("Select: ");
 
     switch (choice) {
-      case "1":
+      case "1": {
+        const vsCheck = checkVsCodeOpen(runtimeConfig.remoteRepo);
+        if (vsCheck.warned) console.log(vsCheck.message);
+        if (!vsCheck.ok) {
+          console.log("\n" + vsCheck.reason);
+          break;
+        }
         await pullRepos(runtimeConfig);
         await syncSrc(runtimeConfig);
         await mergePackageJson(runtimeConfig);
@@ -57,6 +64,7 @@ async function run() {
         const pushed = await commitAndPush(runtimeConfig);
         if (pushed) process.exit(0);
         break;
+      }
 
       case "2":
         runtimeConfig = await openSettings(runtimeConfig);
