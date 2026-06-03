@@ -50,7 +50,18 @@ async function run() {
     const choice = await ask("Select: ");
 
     switch (choice) {
-      case "1":
+      case "1": {
+        const mainDisplay = runtimeConfig.mainRepoName || "Main Repo";
+        const remoteDisplay = runtimeConfig.remoteRepoName || "Remote Repo";
+        console.log(
+          `\n  ${mainDisplay} [\x1b[36m${runtimeConfig.mainBranch}\x1b[0m]` +
+            ` → ${remoteDisplay} [\x1b[36m${runtimeConfig.remoteBranch}\x1b[0m]`
+        );
+        const confirm = await ask("Proceed with sync? (y/n): ");
+        if (!["y", "yes"].includes(confirm.toLowerCase())) {
+          console.log("Cancelled.");
+          break;
+        }
         await pullRepos(runtimeConfig);
         await checkRemoteChanges(runtimeConfig);
         await syncSrc(runtimeConfig);
@@ -59,6 +70,7 @@ async function run() {
         const pushed = await commitAndPush(runtimeConfig);
         if (pushed) process.exit(0);
         break;
+      }
 
       case "2":
         runtimeConfig = await openSettings(runtimeConfig);
