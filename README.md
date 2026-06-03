@@ -107,10 +107,23 @@ All fields are editable via the **Settings** menu (option 2).
 | `Not a git repo: <path>` | The path has no `.git` directory |
 | `Main/Remote repo not found: <path>` | The path does not exist on disk |
 | `Main/Remote branch "<name>" does not exist` | Branch not found in local or remote tracking refs |
+| `EPERM: operation not permitted, rmdir` | Files in the target directory are locked or read-only (common on OneDrive paths or after certain git operations) — the tool retries automatically; if it persists, close any apps with those files open |
 | Push fails with auth error | Git credential helper or SSH key not configured — set up authentication outside this tool |
 | Clone fails with auth error | The git URL requires credentials; ensure your credential helper or SSH key has access to the remote |
 
 ## Release Notes
+
+### v1.2.1
+
+**Fixed EPERM errors when syncing on Windows (OneDrive / read-only files)**
+
+On some Windows machines, syncing would fail with `EPERM: operation not permitted, rmdir` when the target directory was inside an OneDrive folder or contained files with read-only attributes. The fix:
+
+- Clears read-only attributes on all files and folders in the target directory before removal
+- Retries the removal up to 5 times (1 second apart) on transient `EPERM` / `EBUSY` errors, which are common when OneDrive or antivirus tools briefly lock files
+- Non-transient errors are still surfaced immediately
+
+No configuration changes required.
 
 ### v1.1.0
 
