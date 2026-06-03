@@ -16,7 +16,8 @@ Options:
 Interactive menu:
   1. Run Sync    Pull repos, sync source files, merge package.json, and push changes
   2. Settings    Configure main/remote repo paths and branch names
-  3. Exit        Quit the tool
+  3. View        Show currently configured repos, paths, and branches
+  4. Exit        Quit the tool
 `);
   process.exit(0);
 }
@@ -45,7 +46,8 @@ async function run() {
     console.log("==================================");
     console.log("1. Run Sync");
     console.log("2. Settings");
-    console.log("3. Exit");
+    console.log("3. View");
+    console.log("4. Exit");
 
     const choice = await ask("Select: ");
 
@@ -57,7 +59,7 @@ async function run() {
           `\n  ${mainDisplay} [\x1b[36m${runtimeConfig.mainBranch}\x1b[0m]` +
             ` → ${remoteDisplay} [\x1b[36m${runtimeConfig.remoteBranch}\x1b[0m]`
         );
-        const confirm = await ask("Proceed with sync? (y/n): ");
+        const confirm = await ask("\nProceed with sync? (y/n): ");
         if (!["y", "yes"].includes(confirm.toLowerCase())) {
           console.log("Cancelled.");
           break;
@@ -76,7 +78,25 @@ async function run() {
         runtimeConfig = await openSettings(runtimeConfig);
         break;
 
-      case "3":
+      case "3": {
+        const blue = "\x1b[34m";
+        const reset = "\x1b[0m";
+        const bold = "\x1b[1m";
+        const dim = "\x1b[2m";
+        const main = runtimeConfig.mainRepoName || "Main Repo";
+        const remote = runtimeConfig.remoteRepoName || "Remote Repo";
+        console.log("\n----------------------------------");
+        console.log(`${bold}${main}${reset}`);
+        console.log(`  path    ${dim}${runtimeConfig.mainRepoUrl || runtimeConfig.mainRepo}${reset}`);
+        console.log(`  branch  ${blue}${runtimeConfig.mainBranch}${reset}`);
+        console.log(`\n${bold}${remote}${reset}`);
+        console.log(`  path    ${dim}${runtimeConfig.remoteRepo}${reset}`);
+        console.log(`  branch  ${blue}${runtimeConfig.remoteBranch}${reset}`);
+        console.log("----------------------------------");
+        break;
+      }
+
+      case "4":
         process.exit(0);
 
       default:
