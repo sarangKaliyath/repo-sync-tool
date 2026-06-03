@@ -59,10 +59,36 @@ Options:
 Interactive menu:
   1. Run Sync    Pull repos, sync source files, merge package.json, and push changes
   2. Settings    Configure main/remote repo paths and branch names
-  3. Exit        Quit the tool
+  3. View        Show currently configured repos, paths, and branches
+  4. Exit        Quit the tool
 ```
 
-Select **1** to run a full sync, or **2** to reconfigure without syncing.
+Select **1** to run a full sync, **2** to reconfigure, or **3** to review the current configuration.
+
+### Run Sync confirmation
+
+Before the sync starts, the tool displays the direction of the operation and asks for confirmation:
+
+```
+  My App [dev] → Staging Repo [staging]
+
+Proceed with sync? (y/n):
+```
+
+If you enter `n`, the sync is cancelled and the main menu is shown again.
+
+### Files-to-push diff
+
+After staging changes and before the push prompt, the tool prints each changed file with its status and line counts:
+
+```
+📋 Files to be pushed:
+  [+] src/new-component.js        +142  -0
+  [~] src/existing-service.js     +23   -11
+  [-] src/removed-util.js         +0    -67
+```
+
+`[+]` new file (green), `[~]` modified (yellow), `[-]` deleted (red). Line additions are green, deletions are red.
 
 ## Configuration
 
@@ -92,13 +118,18 @@ All fields are editable via the **Settings** menu (option 2).
 
 ### Settings Menu Options
 
-1. Main repo label
-2. Main repo path or git URL
-3. Remote repo label
-4. Remote repo path
-5. Main branch
-6. Remote branch
-7. Sync path
+Each option shows the relevant configured label in brackets so it is always clear which repo is being edited. Branch options also show the currently active branch name (highlighted in blue).
+
+```
+1. label          [My App]
+2. path/git url   [My App]
+3. label          [Staging Repo]
+4. path           [Staging Repo]
+5. branch         [My App -> dev]
+6. branch         [Staging Repo -> staging]
+7. sync path
+8. back
+```
 
 ## Troubleshooting
 
@@ -112,6 +143,15 @@ All fields are editable via the **Settings** menu (option 2).
 | Clone fails with auth error | The git URL requires credentials; ensure your credential helper or SSH key has access to the remote |
 
 ## Release Notes
+
+### v1.2.2
+
+**UI improvements — sync confirmation, coloured diff, view config, and settings clarity**
+
+- **Sync confirmation** — selecting Run Sync now shows the sync direction (`Main Repo [branch] → Remote Repo [branch]`) and asks for a y/n confirmation before any work begins; entering `n` returns to the main menu without touching either repo
+- **Files-to-push diff** — the commit step now lists every staged file with its status icon (`[+]` added, `[~]` modified, `[-]` deleted) and per-file line counts; additions are shown in green, deletions in red
+- **View config option** — a new option 3 in the main menu displays the currently configured repo names, paths, and branches (branches highlighted in blue) without starting a sync
+- **Settings labels** — all settings menu entries now show the configured repo label in brackets (e.g. `branch [My App -> dev]`); branch entries include the active branch name in blue; a **back** option (8) exits settings without saving
 
 ### v1.2.1
 
