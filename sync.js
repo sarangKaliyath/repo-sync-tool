@@ -25,6 +25,7 @@ const { config } = require("./lib/config");
 const { initGitClients } = require("./lib/gitClients");
 const { ensureInitialSetup } = require("./lib/setup");
 const { pullRepos } = require("./lib/gitOps");
+const { checkRemoteChanges } = require("./lib/remoteChangeDetector");
 const { syncSrc } = require("./lib/fileSyncer");
 const { mergePackageJson } = require("./lib/packageMerge");
 const { buildGitDiff } = require("./lib/diff");
@@ -51,6 +52,7 @@ async function run() {
     switch (choice) {
       case "1":
         await pullRepos(runtimeConfig);
+        await checkRemoteChanges(runtimeConfig);
         await syncSrc(runtimeConfig);
         await mergePackageJson(runtimeConfig);
         await buildGitDiff();
